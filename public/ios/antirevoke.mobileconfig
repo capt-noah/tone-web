@@ -36,27 +36,27 @@
                 </dict>
             </array>
             <key>PayloadDisplayName</key>
-            <string>NOTFLIX Anti-Revoke Protection</string>
+            <string>Tone Anti-Revoke Protection</string>
             <key>PayloadIdentifier</key>
-            <string>com.notflix.antirevoke.dns</string>
+            <string>com.tone.antirevoke.dns</string>
             <key>PayloadOrganization</key>
-            <string>NOTFLIX</string>
+            <string>Tone</string>
             <key>PayloadType</key>
             <string>com.apple.dnsSettings.managed</string>
             <key>PayloadUUID</key>
-            <string>C5182258-F1AA-41AE-91DF-7809DC43555D</string>
+            <string>D5283369-F2BB-42BF-A2EF-8910ED54666E</string>
             <key>PayloadVersion</key>
             <integer>1</integer>
         </dict>
     </array>
     <key>PayloadDescription</key>
-    <string>Permanently prevents iOS from revoking NOTFLIX by blocking Apple OCSP and certificate validation checks.</string>
+    <string>Permanently prevents iOS from revoking Tone by blocking Apple OCSP and certificate validation checks.</string>
     <key>PayloadDisplayName</key>
-    <string>NOTFLIX Anti-Revoke Protection</string>
+    <string>Tone Anti-Revoke Protection</string>
     <key>PayloadIdentifier</key>
-    <string>com.notflix.antirevoke.profile</string>
+    <string>com.tone.antirevoke.profile</string>
     <key>PayloadOrganization</key>
-    <string>NOTFLIX</string>
+    <string>Tone</string>
     <key>PayloadScope</key>
     <string>User</string>
     <key>PayloadType</key>
