@@ -11,6 +11,7 @@ import {
   Sparkles,
   LogOut,
   Smartphone,
+  Apple,
   HardDrive,
   PictureInPicture2,
   Home,
@@ -97,11 +98,18 @@ export function TopHeader() {
             <a
               href={downloadUrl}
               download="tone.apk"
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 backdrop-blur-md text-xs font-semibold text-[#fff8f2] transition-all hover:scale-105"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 backdrop-blur-md text-xs font-semibold text-[#fff8f2] transition-all hover:scale-105"
             >
               <Smartphone className="w-3.5 h-3.5 text-[#b9cbba]" />
-              <span>Get APK</span>
+              <span>APK</span>
             </a>
+            <Link
+              href="/ios"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 backdrop-blur-md text-xs font-semibold text-[#fff8f2] transition-all hover:scale-105"
+            >
+              <Apple className="w-3.5 h-3.5 text-[#fff8f2]" />
+              <span>iOS</span>
+            </Link>
             <Link
               href="/login"
               className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#b9cbba] hover:bg-[#fff8f2] text-[#0d0f0d] text-xs font-bold shadow-md transition-all hover:scale-105 active:scale-95"

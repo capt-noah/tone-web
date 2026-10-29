@@ -8,6 +8,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
   Smartphone,
+  Apple,
   QrCode,
   Download,
   Copy,
@@ -180,18 +181,26 @@ export function AndroidShowcaseSection() {
                 <a
                   href={downloadUrl}
                   download="tone.apk"
-                  className="flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#b9cbba] hover:bg-[#fff8f2] text-[#0d0f0d] text-xs sm:text-sm font-bold shadow-[0_0_30px_rgba(185,203,186,0.3)] transition-all hover:scale-105 active:scale-95"
+                  className="flex items-center gap-2 px-6 py-3.5 rounded-full bg-[#b9cbba] hover:bg-[#fff8f2] text-[#0d0f0d] text-xs sm:text-sm font-bold shadow-[0_0_30px_rgba(185,203,186,0.3)] transition-all hover:scale-105 active:scale-95"
                 >
                   <Smartphone className="w-4 h-4" />
                   <span>Get APK</span>
                 </a>
 
+                <a
+                  href="/ios"
+                  className="flex items-center gap-2 px-6 py-3.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-xs sm:text-sm font-bold text-[#fff8f2] shadow-[0_0_20px_rgba(255,255,255,0.08)] transition-all hover:scale-105 active:scale-95"
+                >
+                  <Apple className="w-4 h-4 text-[#fff8f2]" />
+                  <span>Install for iOS</span>
+                </a>
+
                 <button
                   onClick={() => setShowQrModal(true)}
-                  className="flex items-center gap-2 px-6 py-3.5 rounded-full bg-[#1c241e] hover:bg-white/10 border border-white/10 text-xs sm:text-sm font-semibold text-[#fff8f2] transition-colors"
+                  className="flex items-center gap-2 px-5 py-3.5 rounded-full bg-[#1c241e] hover:bg-white/10 border border-white/10 text-xs sm:text-sm font-semibold text-[#fff8f2] transition-colors"
                 >
                   <QrCode className="w-4 h-4 text-[#b9cbba]" />
-                  <span>Display Mobile QR</span>
+                  <span>Display QR</span>
                 </button>
               </div>
 
