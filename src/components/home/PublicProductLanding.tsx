@@ -11,6 +11,7 @@ import {
   ArrowRight,
   Send,
   Music2,
+  Apple,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { ScrollWaveVisualizer } from './landing/ScrollWaveVisualizer';
@@ -196,7 +197,7 @@ export function PublicProductLanding() {
 
             {/* Simple Subtext */}
             <p className="hero-subtext text-base sm:text-lg md:text-xl text-[#a6ada6] max-w-2xl mt-6 leading-relaxed">
-              Lossless Telegram cloud storage. Studio sound quality. Offline listening on Android.
+              Lossless Telegram cloud storage. Studio sound quality. Native apps for iOS & Android.
             </p>
 
             {/* Call to Action Buttons */}
@@ -220,10 +221,19 @@ export function PublicProductLanding() {
                 </Link>
               )}
 
+              {/* Install for iOS Button */}
+              <Link
+                href="/ios"
+                className="hero-cta-btn flex items-center gap-2 px-6 py-3.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-[#fff8f2] font-semibold text-xs sm:text-sm transition-all hover:scale-105 active:scale-95 shadow-md"
+              >
+                <Apple className="w-4 h-4 text-[#fff8f2]" />
+                <span>Install for iOS</span>
+              </Link>
+
               <a
                 href={downloadUrl}
                 download="tone.apk"
-                className="hero-cta-btn flex items-center gap-2 px-6 py-3.5 rounded-full bg-[#1c211d] hover:bg-[#283029] border border-white/10 text-[#fff8f2] font-semibold text-xs sm:text-sm transition-all hover:scale-105 active:scale-95 shadow-md"
+                className="hero-cta-btn flex items-center gap-2 px-6 py-3.5 rounded-full bg-[#1c211d] hover:bg-[#283029] border border-white/10 text-[#a6ada6] hover:text-[#fff8f2] font-semibold text-xs sm:text-sm transition-all hover:scale-105 active:scale-95 shadow-md"
               >
                 <Smartphone className="w-4 h-4 text-[#b9cbba]" />
                 <span>Get APK</span>
@@ -310,7 +320,22 @@ export function PublicProductLanding() {
               <span className="font-bold text-sm text-[#fff8f2]">TONE</span>
             </div>
 
-            <div className="flex items-center gap-8 font-semibold">
+            <div className="flex items-center gap-6 sm:gap-8 font-semibold">
+              <Link
+                href="/ios"
+                className="hover:text-[#fff8f2] text-[#b9cbba] transition-colors flex items-center gap-1.5"
+              >
+                <Apple className="w-3.5 h-3.5 text-[#fff8f2]" />
+                <span>iOS App</span>
+              </Link>
+              <a
+                href={downloadUrl}
+                download="tone.apk"
+                className="hover:text-[#b9cbba] transition-colors flex items-center gap-1.5"
+              >
+                <Smartphone className="w-3.5 h-3.5" />
+                <span>Android APK</span>
+              </a>
               <a
                 href="https://t.me/tone_bot"
                 target="_blank"
@@ -319,14 +344,6 @@ export function PublicProductLanding() {
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>Telegram Bot</span>
-              </a>
-              <a
-                href={downloadUrl}
-                download="tone.apk"
-                className="hover:text-[#b9cbba] transition-colors flex items-center gap-1.5"
-              >
-                <Smartphone className="w-3.5 h-3.5" />
-                <span>Android APK</span>
               </a>
               <Link href="/login" className="hover:text-[#fff8f2] transition-colors">
                 Sign In

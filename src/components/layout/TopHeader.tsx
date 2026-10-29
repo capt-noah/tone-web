@@ -199,16 +199,25 @@ export function TopHeader() {
             </>
           )}
 
-          {/* Mobile APK Link */}
+          {/* Mobile App Links */}
           {!isDesktop && (
-            <a
-              href="https://musicly-4l0y.onrender.com/download/musicly.apk"
-              download="tone.apk"
-              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.08] hover:bg-white/[0.14] border border-white/15 backdrop-blur-md text-xs font-semibold text-[#fff8f2] transition-colors"
-            >
-              <Smartphone className="w-3.5 h-3.5 text-[#b9cbba]" />
-              <span>Get APK</span>
-            </a>
+            <div className="hidden lg:flex items-center gap-2">
+              <Link
+                href="/ios"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.08] hover:bg-white/[0.14] border border-white/15 backdrop-blur-md text-xs font-semibold text-[#fff8f2] transition-colors"
+              >
+                <Apple className="w-3.5 h-3.5 text-[#fff8f2]" />
+                <span>iOS</span>
+              </Link>
+              <a
+                href={downloadUrl}
+                download="tone.apk"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.08] hover:bg-white/[0.14] border border-white/15 backdrop-blur-md text-xs font-semibold text-[#fff8f2] transition-colors"
+              >
+                <Smartphone className="w-3.5 h-3.5 text-[#b9cbba]" />
+                <span>APK</span>
+              </a>
+            </div>
           )}
 
           {/* Dynamic Expanding/Contracting Sync Capsule Button */}
