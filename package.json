@@ -4,7 +4,6 @@
   "private": true,
   "description": "Tone — Lossless Audio Web App & Backend API",
   "author": "Tone",
-  "main": "electron/main.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -13,35 +12,7 @@
     "backend:dev": "npm --prefix backend run dev",
     "backend:build": "npm --prefix backend run build",
     "backend:start": "npm --prefix backend start",
-    "backend:test": "npx tsx backend/scripts/test_auth_suite.ts",
-    "desktop:dev": "concurrently -k \"next dev\" \"wait-on tcp:3000 && electron .\"",
-    "desktop:start": "electron .",
-    "desktop:dist": "next build && cp -R public .next/standalone/ && cp -R .next/static .next/standalone/.next/ && electron-builder --mac --dir -c.mac.identity=null"
-  },
-  "build": {
-    "appId": "com.tone.desktop",
-    "productName": "Tone",
-    "asar": false,
-    "directories": {
-      "buildResources": "build"
-    },
-    "mac": {
-      "category": "public.app-category.music",
-      "icon": "build/icon.icns",
-      "target": [
-        "dir"
-      ],
-      "darkModeSupport": true,
-      "hardenedRuntime": false,
-      "gatekeeperAssess": false
-    },
-    "files": [
-      "electron/**/*",
-      ".next/standalone/**/*",
-      ".next/static/**/*",
-      "public/**/*",
-      "package.json"
-    ]
+    "backend:test": "npx tsx backend/scripts/test_auth_suite.ts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -67,13 +38,9 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "concurrently": "^10.0.5",
-    "electron": "^40.10.2",
-    "electron-builder": "^26.15.3",
     "eslint": "^9",
     "eslint-config-next": "16.3.5",
     "tailwindcss": "^4",
-    "typescript": "^5",
-    "wait-on": "^9.1.0"
+    "typescript": "^5"
   }
 }

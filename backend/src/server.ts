@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import express, { Request, Response } from 'express';
+import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.routes';
@@ -9,13 +9,14 @@ import mediaRoutes from './routes/media.routes';
 import telegramRoutes from './routes/telegram.routes';
 import playerRoutes from './routes/player.routes';
 import interactionsRoutes from './routes/interactions.routes';
-import { cleanupExpiredSessions } from './services/session.service';
-import { botUsername } from './config';
 
 const app = express();
 
+// Media files are served from external providers (Telegram) or stored as base64 in DB
+// No local storage used on server disk to prevent filling up storage
+
 // Express Config
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
   origin: true,
@@ -40,9 +41,78 @@ app.use('/', mediaRoutes);
 import fs from 'fs';
 import path from 'path';
 
+// Serve static iOS / public assets across all possible root directories
+const candidatePublicDirs = [
+  path.resolve(process.cwd(), 'backend/public'),
+  path.resolve(process.cwd(), 'public'),
+  path.resolve(__dirname, '../public'),
+  path.resolve(__dirname, '../../public'),
+];
+
+for (const dir of candidatePublicDirs) {
+  if (fs.existsSync(dir)) {
+    app.use(express.static(dir));
+  }
+}
+
+// Dedicated handler for app icons (/icon.png and /images/icon.png)
+app.get(['/icon.png', '/images/icon.png'], (_req, res) => {
+  const iconCandidates = [
+    path.resolve(process.cwd(), 'backend/public/images/icon.png'),
+    path.resolve(process.cwd(), 'backend/public/icon.png'),
+    path.resolve(process.cwd(), 'public/images/icon.png'),
+    path.resolve(process.cwd(), 'public/icon.png'),
+    path.resolve(process.cwd(), 'assets/images/icon.png'),
+    path.resolve(__dirname, '../public/images/icon.png'),
+    path.resolve(__dirname, '../public/icon.png'),
+  ];
+  for (const ic of iconCandidates) {
+    if (fs.existsSync(ic)) {
+      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      return fs.createReadStream(ic).pipe(res);
+    }
+  }
+  res.status(404).send('Icon not found');
+});
+
+// Dedicated handler for signed Enterprise IPA
+app.get(['/ios/Tone-Enterprise.ipa', '/download/Tone-Enterprise.ipa'], (_req, res) => {
+  const ipaCandidates = [
+    path.resolve(process.cwd(), 'backend/public/ios/Tone-Enterprise.ipa'),
+    path.resolve(process.cwd(), 'public/ios/Tone-Enterprise.ipa'),
+    path.resolve(__dirname, '../public/ios/Tone-Enterprise.ipa'),
+  ];
+  for (const ipa of ipaCandidates) {
+    if (fs.existsSync(ipa)) {
+      res.setHeader('Content-Type', 'application/octet-stream');
+      res.setHeader('Content-Disposition', 'attachment; filename="Tone-Enterprise.ipa"');
+      return fs.createReadStream(ipa).pipe(res);
+    }
+  }
+  res.status(404).send('IPA not found');
+});
+
+// Dedicated handler for antirevoke profile with Apple MIME type
+app.get(['/ios/antirevoke.mobileconfig'], (_req, res) => {
+  const configCandidates = [
+    path.resolve(process.cwd(), 'backend/public/ios/antirevoke.mobileconfig'),
+    path.resolve(process.cwd(), 'public/ios/antirevoke.mobileconfig'),
+    path.resolve(__dirname, '../public/ios/antirevoke.mobileconfig'),
+  ];
+  for (const cfg of configCandidates) {
+    if (fs.existsSync(cfg)) {
+      res.setHeader('Content-Type', 'application/x-apple-aspen-config');
+      res.setHeader('Content-Disposition', 'attachment; filename="antirevoke.mobileconfig"');
+      return fs.createReadStream(cfg).pipe(res);
+    }
+  }
+  res.status(404).send('Profile not found');
+});
+
 // Dynamic manifest.plist endpoint for iOS OTA
-app.get('/ios/manifest.plist', (req: Request, res: Response) => {
-  const host = (req.headers['x-forwarded-host'] as string) || req.headers.host || 'musicly-4l0y.onrender.com';
+app.get('/ios/manifest.plist', (req, res) => {
+  const host = req.headers['x-forwarded-host'] || req.headers.host || 'tone-web-dghw.onrender.com';
   const proto = (req.headers['x-forwarded-proto'] as string) || 'https';
   const baseUrl = `${proto}://${host}`;
 
@@ -81,7 +151,7 @@ app.get('/ios/manifest.plist', (req: Request, res: Response) => {
             <key>metadata</key>
             <dict>
                 <key>bundle-identifier</key>
-                <string>com.musicly.ios</string>
+                <string>com.gto.supposetv.ent</string>
                 <key>bundle-version</key>
                 <string>1.0.0</string>
                 <key>kind</key>
@@ -100,8 +170,8 @@ app.get('/ios/manifest.plist', (req: Request, res: Response) => {
 });
 
 // Standalone Web iOS Installer Page
-app.get('/ios', (req: Request, res: Response) => {
-  const host = (req.headers['x-forwarded-host'] as string) || req.headers.host || 'musicly-4l0y.onrender.com';
+app.get('/ios', (req, res) => {
+  const host = req.headers['x-forwarded-host'] || req.headers.host || 'musicly-4l0y.onrender.com';
   const proto = (req.headers['x-forwarded-proto'] as string) || 'https';
   const manifestUrl = `${proto}://${host}/ios/manifest.plist`;
   const itmsUrl = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestUrl)}`;
@@ -157,7 +227,7 @@ app.get('/ios', (req: Request, res: Response) => {
 });
 
 // Android APK Download Route
-app.get(['/download/musicly.apk', '/download/tone.apk'], (req: Request, res: Response) => {
+app.get(['/download/musicly.apk', '/download/tone.apk'], (req, res) => {
   const candidatePaths = [
     path.resolve(process.cwd(), 'public/download/musicly.apk'),
     path.resolve(process.cwd(), 'public/download/tone.apk'),
@@ -174,7 +244,7 @@ app.get(['/download/musicly.apk', '/download/tone.apk'], (req: Request, res: Res
   }
 
   // Detect iOS user agent and offer instant redirect/option to install iOS app
-  const ua = ((req.headers['user-agent'] as string) || '').toLowerCase();
+  const ua = (req.headers['user-agent'] || '').toLowerCase();
   const isIOS = ua.includes('iphone') || ua.includes('ipad') || ua.includes('ipod');
 
   if (isIOS) {
@@ -213,43 +283,25 @@ app.get(['/download/musicly.apk', '/download/tone.apk'], (req: Request, res: Res
 </html>`);
 });
 
-app.get('/', (_req: Request, res: Response) => {
-  res.json({
-    app: "Tone Backend API",
-    version: "2.0.0",
-    engine: "TypeScript + Drizzle + Timing-Safe Auth",
-    bot: `@${botUsername}`,
-    status: "operational"
-  });
+app.get('/', (req, res) => {
+  res.send('Musicly Backend API (TypeScript + Drizzle + Manual Sessions)');
 });
 
 // Initialize Telegram Bot services
 import { initTelegramBot } from './services/telegram.service';
 initTelegramBot();
 
-// Periodic expired session pruner (runs once every 24 hours)
-setInterval(async () => {
-  try {
-    const pruned = await cleanupExpiredSessions();
-    if (pruned > 0) {
-      console.log(`[Tone] Pruned ${pruned} expired sessions from database.`);
-    }
-  } catch (err: any) {
-    console.warn('[Tone] Session pruning cycle error:', err?.message || err);
-  }
-}, 24 * 60 * 60 * 1000);
-
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`[Tone Backend] Listening on port ${PORT}... (Bot: @${botUsername})`);
+  console.log(`Musicly Backend listening on port ${PORT}...`);
 });
 
 process.on('uncaughtException', (err) => {
-  console.error('[Tone Backend] UNCAUGHT EXCEPTION:', err);
+  console.error('UNCAUGHT EXCEPTION:', err);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  console.error('[Tone Backend] UNHANDLED REJECTION at:', promise, 'reason:', reason);
+  console.error('UNHANDLED REJECTION at:', promise, 'reason:', reason);
 });
 
 export default app;
